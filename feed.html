@@ -1,0 +1,36 @@
+<!DOCTYPE HTML> 
+<html lang="en-US"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <title>Feed</title> 
+</head> 
+ 
+<body>
+
+<h1>Feed</h1>
+
+  <ul>
+    <li>url: {{ feed.url }}</li>
+    <li>hub: {{ feed.hub }}</li> 
+  </ul>
+
+  <h2>Actions</h2>
+
+  <a href="/feeds/get_hub/{{ feed.key }}">get hub</a><br/>
+  <a href="/feeds/sub/{{ feed.key }}">sub</a><br/>
+  <a href="/feeds/unsub/{{ feed.key }}">unsub</a><br/>
+
+  <h2>Posts</h2>
+  <ul>
+    {% for post in post_list %}
+      <li>
+        <pre>
+          {{ post.content }}
+        </pre>
+      </li>
+    {% endfor %}
+  </ul>
+
+
+</body> 
+</html>

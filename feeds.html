@@ -1,0 +1,31 @@
+<!DOCTYPE HTML> 
+<html lang="en-US"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <title>Feeds</title> 
+</head> 
+ 
+<body>
+
+<h1>Feeds</h1>
+
+  <h2>New feed</h2>
+  <form action="/feeds" method="post">
+    <div>
+      <label>feed url:</label>
+      <input type="text" name="url"/>
+    </div>
+    <div>
+      <input type="submit" value="create">
+    </div>
+  </form>
+
+  <h2>Old feeds</h2>
+  <ul>
+    {% for feed in feed_list %}
+      <li><a href="/feeds/show/{{ feed.key }}">{{ feed.url }}</a></li>
+    {% endfor %}
+  </ul>
+
+</body> 
+</html>
