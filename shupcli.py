@@ -24,14 +24,20 @@ class Feed(db.Model):
     d = feedparser.parse(self.url)
     # get the hub
     # <link rel='hub' href='http://pubsubhubbub.appspot.com/'/>
-    link = (link for link in d.feed.links if link['rel'] == 'hub' ).next()
-    if link:
-      self.hub = link['href']
-      self.put()
-    else:
+    try:
+      link = (link for link in d.feed.links if link['rel'] == 'hub' ).next()
+    except:
       raise Exception('booo. this feed haz no hub link')  
-  
+    self.hub = link['href']
+    self.put()
+
   def sub(self):
+    self._sub('subscribe')
+
+  def unsub(self):
+    self._sub('unsubscribe')
+ 
+  def _sub(self, mode):
     # Send an POST request to http://tumblr.superfeedr.com, with the following params :
     #   hub.mode : subscribe or unsubscribe
     #   hub.verify : sync or async
@@ -41,9 +47,9 @@ class Feed(db.Model):
       logging.info('going to sub')
       logging.info('hub is @: ' + self.hub)
       data = urllib.urlencode({
-          'hub.mode' : 'subscribe',
+          'hub.mode' : mode,
           'hub.verify' : 'async',
-          'hub.callback' : 'http://shupcli.appspot.com/pub',
+          'hub.callback' : 'http://shupcli.appspot.com/feeds/pub/' + str(self.key()),
           'hub.topic' : self.url
         })
       logging.info('data: ' + data)
@@ -63,11 +69,13 @@ class Feed(db.Model):
           # 204 means that we are subscribed. 202 means its going to be done later
           logging.info('sub response status: ' + str(error.code))
 
+
 class Post(db.Model):
   request_body = db.TextProperty()
   request_headers = db.StringProperty(multiline=True)
   date = db.DateTimeProperty(auto_now_add=True)
-  
+  feed_key = db.StringProperty(multiline=False)  
+ 
   published = db.StringProperty(multiline=False)
   title = db.StringProperty(multiline=False)
   summary =  db.TextProperty()
@@ -104,14 +112,21 @@ class FeedListHandler(webapp.RequestHandler):
     self.redirect('/feeds')
 
 class FeedHandler(webapp.RequestHandler):
-  def get(self, action, key):
-    template_values = {}
+  def post(self, action, key):
     feed = db.get(key)
     getattr(self, action)(feed)
 
+  def get(self, action, key):
+    feed = db.get(key)
+    if action == 'pub':
+      action = 'verification'
+    getattr(self, action)(feed)
+
+  # actions
+
   def show(self, feed):
     template_values = {'feed': feed, 
-                       'posts': db.GqlQuery("SELECT * FROM Post WHERE url = :1 ORDER BY date DESC", feed.url)}
+                       'post_list': db.GqlQuery("SELECT * FROM Post WHERE feed_key = :1 ORDER BY date DESC", str(feed.key()))}
     path = os.path.join(os.path.dirname(__file__), 'feed.html')
     self.response.out.write(template.render(path, template_values))
 
@@ -127,22 +142,7 @@ class FeedHandler(webapp.RequestHandler):
     feed.unsub()
     self.redirect('/feeds/show/' + str(feed.key()))
 
-
- 
-class PubHandler(webapp.RequestHandler):
-
-  def post(self):
-    logging.info('PubHandler#post')
-    logging.info(self.request.body)
-    logging.info(self.request.headers)
-    post = Post()
-    post.request_body = db.Text(self.request.body)
-    post.request_headers = str(self.request.headers)
-    post.parse()
-    post.put()
-
-  # this is where we answer the confirmation callback
-  def get(self):
+  def verification(self, feed):
     # hub.mode
     #   REQUIRED. The literal string "subscribe" or "unsubscribe", which matches the original request to the hub from the subscriber.
     # hub.topic
@@ -150,15 +150,25 @@ class PubHandler(webapp.RequestHandler):
     # hub.challenge
     #   REQUIRED. A hub-generated, random string that MUST be echoed by the subscriber to verify the subscription.
     self.response.headers['Content-Type'] = 'text/plain'
-    self.response.out.write(self.request.get('hub.challenge'))
+    self.response.out.write(self.request.get('hub.challenge'))    
+
+  def pub(self, feed):
+    logging.info(self.request.body)
+    logging.info(self.request.headers)
+    post = Post()
+    post.feed_key = str(feed.key())
+    post.request_body = db.Text(self.request.body)
+    post.request_headers = str(self.request.headers)
+    post.parse()
+    post.put()
 
 
 logging.getLogger().setLevel(logging.DEBUG)
 application = webapp.WSGIApplication(
                                      [('/', FeedListHandler),
                                       ('/feeds', FeedListHandler),
-                                      (r'/feeds/(\w+)/(\w+)', FeedHandler),
-                                      ('/pub', PubHandler)],
+                                      (r'/feeds/([^\/]+)/([^\/]+)', FeedHandler)
+                                      ],
                                      debug=True)
 
 def main():

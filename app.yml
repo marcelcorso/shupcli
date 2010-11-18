@@ -8,3 +8,6 @@ handlers:
   static_dir: images
 - url: /.*
   script: shupcli.py
+
+builtins:
+- datastore_admin: on

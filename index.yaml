@@ -15,3 +15,10 @@ indexes:
   - name: url
   - name: date
     direction: desc
+
+- kind: Post
+  properties:
+  - name: feed_key
+  - name: date
+    direction: desc
+

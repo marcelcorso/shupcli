@@ -24,7 +24,7 @@
   <h2>Posts</h2>
   <ul>
     {% for post in post_list %}
-      <li>
+      <li style="border: 1px solid #000">
         <h3><a href="{{ post.link }}">{{ post.title }}</a></h3>
         <small>
           {{ post.published }}
@@ -32,9 +32,6 @@
         <p>
           {{ post.summary }}
         </p>
-        <pre>
-          {{ post.request_body }}
-        </pre>
       </li>
     {% endfor %}
   </ul>
