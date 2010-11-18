@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<feed xmlns:as="http://activitystrea.ms/spec/1.0/" xmlns="http://www.w3.org/2005/Atom" xmlns:geo="http://www.georss.org/georss">
+  <updated>2010-11-18T06:54:50+00:00</updated>
+  <id>http://pas-d.tumblr.com/rss</id>
+  <title>pas d</title>
+  <subtitle>My Last.fm accountThe Cretin HopAll of the music posts on pas-d</subtitle>
+  <link type="application/atom+xml" rel="self" href="http://pas-d.tumblr.com/rss"/>
+  <entry xmlns:sf="http://superfeedr.com/xmpp-pubsub-ext">
+    <id>http://pas-d.tumblr.com/post/1607737921</id>
+    <published>2010-11-18T06:55:15+00:00</published>
+    <updated>2010-11-18T06:55:15+00:00</updated>
+    <title>soyelsek:
+
+The Barreracudas- Diet Coke</title>
+    <summary type="html">&lt;embed type="application/x-shockwave-flash" src="http://pas-d.tumblr.com/swf/audio_player.swf?audio_file=http://www.tumblr.com/audio_file/1607737921/tumblr_lc1nah0tE21qas0ul&amp;color=FFFFFF" height="27" width="207" quality="best"&gt;&lt;/embed&gt;&lt;br/&gt;&lt;br/&gt;&lt;p&gt;&lt;a href="http://soyelsek.tumblr.com/post/1601963610/the-barreracudas-diet-coke" target="_blank"&gt;soyelsek&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;The Barreracudas- Diet Coke&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;img src="http://www.goner-records.com/cart/images/barerracudafront.jpg" width="500" height="700"/&gt;&lt;br/&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    <link type="text/html" rel="alternate" href="http://pas-d.tumblr.com/post/1607737921" title="soyelsek:  The Barreracudas- Diet Coke"/>
+  </entry>
+</feed>

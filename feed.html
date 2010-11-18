@@ -3,6 +3,7 @@
 <head> 
   <meta charset="UTF-8"> 
   <title>Feed</title> 
+  <link rel="shortcut icon" href="/images/favicon.ico">
 </head> 
  
 <body>
@@ -24,8 +25,15 @@
   <ul>
     {% for post in post_list %}
       <li>
+        <h3><a href="{{ post.link }}">{{ post.title }}</a></h3>
+        <small>
+          {{ post.published }}
+        </small>
+        <p>
+          {{ post.summary }}
+        </p>
         <pre>
-          {{ post.content }}
+          {{ post.request_body }}
         </pre>
       </li>
     {% endfor %}
